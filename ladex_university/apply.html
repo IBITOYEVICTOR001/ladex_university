@@ -17,9 +17,10 @@
     <section class="page-banner"><div class="wrap"><p><a href="index.html">Home</a> <span>/</span> <a href="admissions.html">Admissions</a> <span>/</span> Apply</p><h1>Apply to Ladex</h1></div></section>
     <section class="section wrap">
       <div class="section-heading"><div><p class="eyebrow gold-text">Online application</p><h2>Start your application.</h2></div></div>
-      <form id="application-form" class="contact-form" novalidate>
+      <div id="application-access" class="notice" hidden aria-live="polite"></div>
+      <form id="application-form" class="contact-form" novalidate hidden>
         <label>Full name<input name="fullName" autocomplete="name" required></label>
-        <label>Email address<input name="email" type="email" autocomplete="email" required></label>
+        <label>Email address<input name="email" type="email" autocomplete="email" readonly required></label>
         <label>Phone number<input name="phone" type="tel" autocomplete="tel" required></label>
         <label>Date of birth<input name="dateOfBirth" type="date" required></label>
         <label>Programme<select name="programme" required><option value="">Select a programme</option><option>Computer Science</option><option>Accounting</option><option>Microbiology</option><option>English &amp; Literary Studies</option><option>International Relations</option></select></label>

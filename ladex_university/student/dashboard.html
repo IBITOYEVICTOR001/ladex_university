@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Student Dashboard | Ladex International University</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="site-header"></div>
+  <main id="main-content">
+    <section class="page-banner"><div class="wrap"><p><a href="../index.html">Home</a> <span>/</span> Student dashboard</p><h1>Student dashboard</h1></div></section>
+    <section class="section wrap">
+      <div class="section-heading"><div><p class="eyebrow gold-text">Student portal</p><h2 id="student-name">Your account</h2><p id="student-email"></p></div><button id="student-logout" class="button button-navy" type="button">Log out</button></div>
+      <div id="verification-banner" class="notice" hidden><p>Please verify your email address before applying.</p><button id="resend-verification" class="button button-gold" type="button">Resend verification email</button><p class="form-response" aria-live="polite"></p></div>
+      <div id="student-application" aria-live="polite"></div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script src="../js/main.js"></script>
+  <script type="module" src="../js/student.js"></script>
+</body>
+</html>
