@@ -21,12 +21,17 @@ service cloud.firestore {
       allow create: if validMessage();
       allow read, update, delete: if isAdmin();
     }
-    function validApplication() {
+    function validApplication(uid) {
       let d = request.resource.data;
-      return d.keys().hasOnly(['fullName','email','phone','dateOfBirth','programme','lastSchool','statement','status','createdAt'])
-        && d.keys().hasAll(['fullName','email','phone','programme','status','createdAt'])
+      return request.auth != null
+        && request.auth.uid == uid
+        && request.auth.token.email_verified == true
+        && d.keys().hasOnly(['uid','reference','fullName','email','phone','dateOfBirth','programme','lastSchool','statement','status','createdAt'])
+        && d.keys().hasAll(['uid','reference','fullName','email','phone','programme','status','createdAt'])
+        && d.uid == uid
+        && d.reference is string && d.reference.matches('LU-[A-Z2-9]{6}')
+        && d.email == request.auth.token.email
         && d.fullName is string && d.fullName.size() > 1 && d.fullName.size() <= 120
-        && d.email is string && d.email.size() > 3 && d.email.size() <= 254
         && d.phone is string && d.phone.size() >= 7 && d.phone.size() <= 20
         && d.programme is string && d.programme.size() <= 120
         && (!('dateOfBirth' in d) || (d.dateOfBirth is string && d.dateOfBirth.size() <= 20))
@@ -35,9 +40,10 @@ service cloud.firestore {
         && d.status == 'new'
         && d.createdAt == request.time;
     }
-    match /applications/{id} {
-      allow create: if validApplication();
-      allow read, update, delete: if isAdmin();
+    match /applications/{appId} {
+      allow create: if validApplication(appId);
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == appId);
+      allow update, delete: if isAdmin();
     }
     match /{document=**} { allow read, write: if false; }
   }

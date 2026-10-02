@@ -1,8 +1,10 @@
 /* Shared layout loader and lightweight interactive components. */
 const loadPartial = async (target, path) => { try { const response = await fetch(path); if (!response.ok) throw new Error(); document.querySelector(target).innerHTML = await response.text(); } catch { document.querySelector(target).innerHTML = '<p class="layout-error">Navigation could not be loaded.</p>'; } };
-Promise.all([loadPartial('#site-header', 'partials/header.html'), loadPartial('#site-footer', 'partials/footer.html')]).then(() => {
+const partialPrefix = location.pathname.includes('/student/') ? '../' : '';
+Promise.all([loadPartial('#site-header', `${partialPrefix}partials/header.html`), loadPartial('#site-footer', `${partialPrefix}partials/footer.html`)]).then(() => {
   // Keep the shared News destination on the Firestore-powered news archive.
   document.querySelectorAll('a[href="index.html#news"]').forEach(link => link.href = 'news.html');
+  if (partialPrefix) document.querySelectorAll('#site-header a[href], #site-footer a[href], #site-header img[src], #site-footer img[src]').forEach(element => { const attribute = element.hasAttribute('href') ? 'href' : 'src', value = element.getAttribute(attribute); if (value && !value.startsWith('#') && !/^(?:[a-z]+:|\/)/i.test(value)) element.setAttribute(attribute, `${partialPrefix}${value}`); });
   const toggle = document.querySelector('.menu-toggle'), nav = document.querySelector('#main-menu');
   toggle?.addEventListener('click', () => { const open = nav.classList.toggle('open'); toggle.setAttribute('aria-expanded', open); toggle.setAttribute('aria-label', open ? 'Close main menu' : 'Open main menu'); });
   document.querySelectorAll('.has-submenu > button').forEach(button => button.addEventListener('click', () => { if (innerWidth < 950) { const item = button.parentElement, open = item.classList.toggle('open'); button.setAttribute('aria-expanded', open); } }));
@@ -20,5 +22,5 @@ const lightbox = document.querySelector('.lightbox'); document.querySelectorAll(
 document.addEventListener('error', event => { const image = event.target; if (image.tagName !== 'IMG' || image.dataset.placeholder) return; image.dataset.placeholder = 'true'; const placeholder = document.createElement('div'); placeholder.className = 'image-placeholder'; placeholder.textContent = image.getAttribute('src').split('/').pop(); image.replaceWith(placeholder); }, true);
 document.querySelectorAll('.accordion button').forEach(button => button.addEventListener('click', () => { const panel = button.nextElementSibling; const open = panel.classList.toggle('open'); button.setAttribute('aria-expanded', open); button.querySelector('span').textContent = open ? '−' : '+'; }));
 // The contact page loads the Firebase-backed form module only when needed.
-if (document.querySelector('.contact-form') && !document.querySelector('#staff-message-form')) import('./contact-form.js');
+if (document.querySelector('.contact-form') && location.pathname.endsWith('/contact.html')) import('./contact-form.js');
 if (!document.body.dataset.page && document.querySelector('.news-grid')) import('./home.js');
