@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Apply to Ladex International University</title>
+  <meta name="description" content="Submit an online application to Ladex International University.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="site-header"></div>
+  <main id="main-content">
+    <section class="page-banner"><div class="wrap"><p><a href="index.html">Home</a> <span>/</span> <a href="admissions.html">Admissions</a> <span>/</span> Apply</p><h1>Apply to Ladex</h1></div></section>
+    <section class="section wrap">
+      <div class="section-heading"><div><p class="eyebrow gold-text">Online application</p><h2>Start your application.</h2></div></div>
+      <form id="application-form" class="contact-form" novalidate>
+        <label>Full name<input name="fullName" autocomplete="name" required></label>
+        <label>Email address<input name="email" type="email" autocomplete="email" required></label>
+        <label>Phone number<input name="phone" type="tel" autocomplete="tel" required></label>
+        <label>Date of birth<input name="dateOfBirth" type="date" required></label>
+        <label>Programme<select name="programme" required><option value="">Select a programme</option><option>Computer Science</option><option>Accounting</option><option>Microbiology</option><option>English &amp; Literary Studies</option><option>International Relations</option></select></label>
+        <label>Last school attended<input name="lastSchool" autocomplete="organization" required></label>
+        <label>Personal statement<textarea name="statement" maxlength="1500" required></textarea></label>
+        <label><input name="consent" type="checkbox" required> I agree that Ladex University may use this information to process my application.</label>
+        <label class="honeypot" aria-hidden="true">Leave this blank<input name="website" tabindex="-1" autocomplete="off"></label>
+        <button class="button button-gold" type="submit">Submit application</button>
+        <p class="form-response" aria-live="polite"></p>
+      </form>
+      <div id="application-confirmation" class="notice" hidden aria-live="polite"></div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script src="js/main.js"></script>
+  <script type="module" src="js/apply.js"></script>
+</body>
+</html>

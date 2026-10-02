@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == "victoribitoye70@gmail.com";
+    }
+    function validMessage() {
+      return request.resource.data.keys().hasAll(['name','email','subject','message','createdAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 100
+        && request.resource.data.email is string && request.resource.data.email.size() > 3 && request.resource.data.email.size() <= 254
+        && request.resource.data.subject is string && request.resource.data.subject.size() > 0 && request.resource.data.subject.size() <= 150
+        && request.resource.data.message is string && request.resource.data.message.size() > 0 && request.resource.data.message.size() <= 1500
+        && request.resource.data.createdAt == request.time
+        && (!('staffId' in request.resource.data) || (request.resource.data.staffId is string && request.resource.data.staffId.size() <= 100));
+    }
+    match /{collection}/{document} {
+      allow read: if collection in ['events','staff','news','notices'];
+      allow write: if collection in ['events','staff','news','notices'] && isAdmin();
+    }
+    match /messages/{message} {
+      allow create: if validMessage();
+      allow read, update, delete: if isAdmin();
+    }
+    function validApplication() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['fullName','email','phone','dateOfBirth','programme','lastSchool','statement','status','createdAt'])
+        && d.keys().hasAll(['fullName','email','phone','programme','status','createdAt'])
+        && d.fullName is string && d.fullName.size() > 1 && d.fullName.size() <= 120
+        && d.email is string && d.email.size() > 3 && d.email.size() <= 254
+        && d.phone is string && d.phone.size() >= 7 && d.phone.size() <= 20
+        && d.programme is string && d.programme.size() <= 120
+        && (!('dateOfBirth' in d) || (d.dateOfBirth is string && d.dateOfBirth.size() <= 20))
+        && (!('lastSchool' in d) || (d.lastSchool is string && d.lastSchool.size() <= 150))
+        && (!('statement' in d) || (d.statement is string && d.statement.size() <= 1500))
+        && d.status == 'new'
+        && d.createdAt == request.time;
+    }
+    match /applications/{id} {
+      allow create: if validApplication();
+      allow read, update, delete: if isAdmin();
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}
