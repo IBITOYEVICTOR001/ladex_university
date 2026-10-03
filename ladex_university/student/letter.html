@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admission Letter | Ladex International University</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .admission-letter { max-width: 760px; margin: 48px auto; padding: 48px; border: 1px solid var(--line); }
+    .letter-heading { display: flex; align-items: center; gap: 16px; margin-bottom: 36px; }
+    .letter-heading img { width: 72px; height: 72px; object-fit: contain; }
+    .letter-heading h1 { margin: 0; font-size: 1.6rem; }
+    .letter-meta { margin: 28px 0; }
+    @media print { .no-print { display: none; } .admission-letter { margin: 0; border: 0; max-width: none; } }
+  </style>
+</head>
+<body>
+  <main class="admission-letter" id="admission-letter" aria-live="polite">
+    <div class="letter-heading"><img src="../images/logo1.png" alt="Ladex International University logo"><div><h1>Ladex International University</h1><p>Admission letter</p></div></div>
+    <p id="letter-date"></p>
+    <p>Dear <strong id="letter-name"></strong>,</p>
+    <p>We are pleased to offer you admission to the <strong id="letter-programme"></strong> programme at Ladex International University. Welcome to our learning community; we look forward to supporting you as you begin this next chapter.</p>
+    <div class="letter-meta"><p><strong>Reference number:</strong> <span id="letter-reference"></span></p><p id="letter-student-id" hidden><strong>Student ID:</strong> <span></span></p></div>
+    <p>Yours sincerely,<br>Admissions Office<br>Ladex International University</p>
+    <button class="button button-gold no-print" id="print-letter" type="button">Print letter</button>
+  </main>
+  <script type="module" src="../js/letter.js"></script>
+</body>
+</html>

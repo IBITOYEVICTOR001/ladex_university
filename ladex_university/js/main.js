@@ -1,6 +1,6 @@
 /* Shared layout loader and lightweight interactive components. */
 const loadPartial = async (target, path) => { try { const response = await fetch(path); if (!response.ok) throw new Error(); document.querySelector(target).innerHTML = await response.text(); } catch { document.querySelector(target).innerHTML = '<p class="layout-error">Navigation could not be loaded.</p>'; } };
-const partialPrefix = location.pathname.includes('/student/') ? '../' : '';
+const partialPrefix = /\/(?:student|admin)\//.test(location.pathname) ? '../' : '';
 Promise.all([loadPartial('#site-header', `${partialPrefix}partials/header.html`), loadPartial('#site-footer', `${partialPrefix}partials/footer.html`)]).then(() => {
   // Keep the shared News destination on the Firestore-powered news archive.
   document.querySelectorAll('a[href="index.html#news"]').forEach(link => link.href = 'news.html');
