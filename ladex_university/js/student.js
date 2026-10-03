@@ -14,6 +14,8 @@ const setResponse = (form, message) => { form.querySelector('.form-response').te
 const dateText = value => { const date = value?.toDate ? value.toDate() : new Date(value); return Number.isNaN(date.getTime()) ? 'Date pending' : new Intl.DateTimeFormat('en-NG', { day: 'numeric', month: 'long', year: 'numeric' }).format(date); };
 
 const registerForm = document.querySelector('#student-register-form');
+const applyAccessNote = document.querySelector('#apply-access-note');
+if (applyAccessNote && new URLSearchParams(location.search).has('apply')) applyAccessNote.hidden = false;
 registerForm?.addEventListener('submit', async event => {
   event.preventDefault();
   if (!registerForm.checkValidity()) { registerForm.reportValidity(); return; }
@@ -43,6 +45,8 @@ document.querySelector('#forgot-password')?.addEventListener('click', async even
 
 const applicationTarget = document.querySelector('#student-application');
 const showDashboard = async user => {
+  await user.reload();
+  await user.getIdToken(true);
   document.querySelector('#student-name').textContent = user.displayName || 'Your account';
   document.querySelector('#student-email').textContent = user.email || '';
   const banner = document.querySelector('#verification-banner'); banner.hidden = user.emailVerified;
@@ -53,10 +57,19 @@ const showDashboard = async user => {
     if (user.emailVerified) { const link = document.createElement('a'); link.className = 'button button-gold'; link.href = '../apply.html'; link.textContent = 'Apply now'; applicationTarget.append(link); }
     return;
   }
-  const application = snap.data(), title = document.createElement('h3'), details = document.createElement('div'); title.textContent = 'Your application'; details.className = 'notice';
+  const application = snap.data(), status = application.status || 'new', title = document.createElement('h3'), details = document.createElement('div'); title.textContent = 'Your application'; details.className = 'notice';
   [['Reference number', application.reference], ['Programme', application.programme], ['Submitted', dateText(application.createdAt)], ['Current status', application.status || 'new'], ['Student ID', application.studentId]].forEach(([label, value]) => { if (value) { const row = document.createElement('p'), name = document.createElement('strong'); name.textContent = `${label}: `; row.append(name, document.createTextNode(value)); details.append(row); } });
-  applicationTarget.append(title, details);
+  const progress = document.createElement('ol'); progress.className = 'application-progress'; progress.setAttribute('aria-label', 'Application progress');
+  const currentStep = status === 'reviewing' ? 1 : ['admitted', 'rejected'].includes(status) ? 2 : 0;
+  ['Submitted', 'Under review', 'Decision', 'Letter'].forEach((step, index) => { const item = document.createElement('li'); item.textContent = step; if (index === currentStep) item.className = 'is-current'; progress.append(item); });
+  applicationTarget.append(title, details, progress);
+  if (status === 'admitted') {
+    const panel = document.createElement('div'), message = document.createElement('p'), link = document.createElement('a'); panel.className = 'notice'; message.textContent = 'Congratulations! You have been admitted to Ladex International University.'; link.className = 'button button-gold'; link.href = 'letter.html'; link.textContent = 'View admission letter'; panel.append(message, link); applicationTarget.append(panel);
+  } else if (status === 'rejected') {
+    const panel = document.createElement('div'), message = document.createElement('p'), link = document.createElement('a'); panel.className = 'notice'; message.textContent = 'Thank you for applying to Ladex. We are sorry that we cannot offer you admission at this time. '; link.href = '../contact.html'; link.textContent = 'Contact Admissions'; message.append(link); panel.append(message); applicationTarget.append(panel);
+  }
 };
-onAuthStateChanged(auth, user => { if (applicationTarget) { if (!user) { location.href = 'login.html'; return; } showDashboard(user).catch(() => { applicationTarget.textContent = 'Your application details could not be loaded. Please try again.'; }); } });
+onAuthStateChanged(auth, user => { if (loginForm && user) { location.href = 'dashboard.html'; return; } if (applicationTarget) { if (!user) { location.href = 'login.html'; return; } showDashboard(user).catch(() => { applicationTarget.textContent = 'Your application details could not be loaded. Please try again.'; }); } });
 document.querySelector('#resend-verification')?.addEventListener('click', async event => { const button = event.currentTarget, response = button.parentElement.querySelector('.form-response'); button.disabled = true; try { await sendEmailVerification(auth.currentUser); response.textContent = 'A new verification email has been sent.'; } catch (error) { response.textContent = errorMessage(error); } finally { button.disabled = false; } });
+document.querySelector('#change-password')?.addEventListener('click', async event => { const button = event.currentTarget, response = button.parentElement.querySelector('.form-response'); button.disabled = true; try { await sendPasswordResetEmail(auth, auth.currentUser.email); response.textContent = 'Password reset instructions have been sent to your email address.'; } catch (error) { response.textContent = errorMessage(error); } finally { button.disabled = false; } });
 document.querySelector('#student-logout')?.addEventListener('click', () => signOut(auth));

@@ -9,7 +9,7 @@ const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const reference = () => { const values = new Uint32Array(6); crypto.getRandomValues(values); return `LU-${Array.from(values, value => alphabet[value % alphabet.length]).join('')}`; };
 
 onAuthStateChanged(auth, async user => {
-  if (!user) { location.href = 'student/register.html'; return; }
+  if (!user) { location.href = 'student/register.html?apply=1'; return; }
   if (!user.emailVerified) { access.hidden = false; access.replaceChildren(); const message = document.createElement('p'), link = document.createElement('a'); message.textContent = 'Please verify your email address before applying. '; link.href = 'student/dashboard.html'; link.textContent = 'Return to your dashboard'; message.append(link); access.append(message); return; }
   try {
     if ((await getDoc(doc(db, 'applications', user.uid))).exists()) { location.href = 'student/dashboard.html'; return; }
