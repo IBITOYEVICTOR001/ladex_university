@@ -369,3 +369,34 @@ section.section.wrap { padding-block: 64px; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+
+/* ---------- Header navigation refinements ---------- */
+/* Keep the shared mobile menu through tablet widths, then use a compact desktop row. */
+.student-login-nav { border-color: var(--navy); color: var(--navy); background: var(--white); }
+.student-login-nav:hover { background: var(--navy); color: var(--white); }
+@media (min-width: 950px) and (max-width: 1099px) {
+  .menu-toggle { display: grid; }
+  #main-menu { display: none; position: absolute; left: 0; right: 0; top: 100%; padding: 12px 16px 20px; background: var(--white); box-shadow: 0 14px 24px rgba(11, 37, 69, .14); max-height: 80vh; overflow-y: auto; }
+  #main-menu.open { display: block; }
+  #main-menu > ul { display: block; }
+  #main-menu a, #main-menu li > button { display: flex; width: 100%; padding: 12px 6px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: none; text-align: left; }
+  #main-menu .has-submenu { position: static; }
+  #main-menu .has-submenu > ul { display: block; position: static; min-width: 0; padding: 0 0 0 14px; background: var(--grey); border-radius: 0; box-shadow: none; }
+  #main-menu .button-row { display: grid; gap: 12px; margin-top: 16px; }
+}
+@media (max-width: 1099px) {
+  #main-menu .button-row { display: grid; gap: 12px; margin-top: 16px; }
+  #main-menu .button-row .button { width: 100%; min-height: 44px; }
+  #main-menu .student-login-nav { border-color: var(--navy); }
+}
+@media (min-width: 1100px) {
+  .header-inner { gap: 10px; }
+  .brand { gap: 8px; }
+  .brand b { font-size: 1.15rem; }
+  #main-menu { gap: 10px; white-space: nowrap; }
+  #main-menu > ul { gap: 0; white-space: nowrap; }
+  #main-menu a, #main-menu li > button { padding: 10px 7px; font-size: .84rem; white-space: nowrap; }
+  #main-menu .button-row { flex-wrap: nowrap; gap: 8px; margin-top: 0; }
+  #main-menu .button { min-height: 44px; padding: 11px 14px; white-space: nowrap; }
+}
