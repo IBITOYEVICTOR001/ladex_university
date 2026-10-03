@@ -26,8 +26,8 @@ service cloud.firestore {
       return request.auth != null
         && request.auth.uid == uid
         && request.auth.token.email_verified == true
-        && d.keys().hasOnly(['uid','reference','fullName','email','phone','dateOfBirth','programme','lastSchool','statement','status','createdAt'])
-        && d.keys().hasAll(['uid','reference','fullName','email','phone','programme','status','createdAt'])
+        && d.keys().hasOnly(['uid','reference','fullName','email','phone','dateOfBirth','programme','lastSchool','statement','status','createdAt','gender','stateOfOrigin','lga','address','entryMode','jambRegNo','jambScore','secondChoice','olevel','nextOfKinName','nextOfKinPhone','nextOfKinRelationship'])
+        && d.keys().hasAll(['uid','reference','fullName','email','phone','programme','status','createdAt','gender','stateOfOrigin','lga','address','entryMode','nextOfKinName','nextOfKinPhone'])
         && d.uid == uid
         && d.reference is string && d.reference.matches('LU-[A-Z2-9]{6}')
         && d.email == request.auth.token.email
@@ -37,6 +37,18 @@ service cloud.firestore {
         && (!('dateOfBirth' in d) || (d.dateOfBirth is string && d.dateOfBirth.size() <= 20))
         && (!('lastSchool' in d) || (d.lastSchool is string && d.lastSchool.size() <= 150))
         && (!('statement' in d) || (d.statement is string && d.statement.size() <= 1500))
+        && d.gender in ['Male','Female']
+        && d.stateOfOrigin is string && d.stateOfOrigin.size() > 1 && d.stateOfOrigin.size() <= 60
+        && d.lga is string && d.lga.size() > 1 && d.lga.size() <= 80
+        && d.address is string && d.address.size() > 4 && d.address.size() <= 250
+        && d.entryMode in ['UTME','Direct Entry']
+        && (!('jambRegNo' in d) || (d.jambRegNo is string && d.jambRegNo.size() >= 8 && d.jambRegNo.size() <= 14))
+        && (!('jambScore' in d) || (d.jambScore is number && d.jambScore >= 0 && d.jambScore <= 400))
+        && (!('secondChoice' in d) || (d.secondChoice is string && d.secondChoice.size() <= 120))
+        && (!('olevel' in d) || (d.olevel is string && d.olevel.size() <= 600))
+        && d.nextOfKinName is string && d.nextOfKinName.size() > 1 && d.nextOfKinName.size() <= 120
+        && d.nextOfKinPhone is string && d.nextOfKinPhone.size() >= 7 && d.nextOfKinPhone.size() <= 20
+        && (!('nextOfKinRelationship' in d) || (d.nextOfKinRelationship is string && d.nextOfKinRelationship.size() <= 60))
         && d.status == 'new'
         && d.createdAt == request.time;
     }
