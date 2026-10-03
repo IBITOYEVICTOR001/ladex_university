@@ -1,0 +1,70 @@
+/* Student portal and application pages. Uses the shared site tokens and buttons. */
+body { overflow-x: hidden; }
+
+.student-auth { padding-block: 48px; }
+.student-auth-card { width: min(100%, 460px); margin-inline: auto; padding: clamp(24px, 5vw, 38px); background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.student-auth-logo { width: 64px; height: 64px; margin: 0 auto 20px; object-fit: contain; }
+.student-auth-card .section-heading { margin-bottom: 24px; }
+.student-auth-card .section-heading h2 { font-size: clamp(1.5rem, 5vw, 2rem); }
+.student-auth-card .contact-form { gap: 18px; }
+.student-auth-card .contact-form label { gap: 8px; }
+.student-auth-card .contact-form input { min-height: 48px; }
+.student-auth-card .contact-form button { width: 100%; min-height: 48px; justify-self: stretch; }
+.student-auth-card > p { margin: 16px 0 0; color: var(--muted); font-size: .94rem; }
+.student-auth-card > p a { font-weight: 600; }
+.form-response:not(:empty) { padding: 10px 12px; border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0; background: var(--grey); color: var(--navy); }
+#apply-access-note { color: var(--navy); }
+
+.student-dashboard { display: grid; gap: 20px; }
+.dashboard-welcome { align-items: center; margin: 0; padding: clamp(20px, 4vw, 32px); background: var(--grey); border-radius: var(--radius); box-shadow: 0 4px 14px rgba(11, 37, 69, .05); }
+.dashboard-welcome h2 { margin-bottom: 4px; }
+.dashboard-welcome #student-email { margin: 0; color: var(--muted); overflow-wrap: anywhere; }
+.dashboard-welcome .button { min-height: 44px; }
+.verification-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin: 0; }
+.verification-banner > p:first-child { margin: 0; flex: 1 1 260px; }
+.verification-banner .button { min-height: 44px; }
+.verification-banner .form-response { flex-basis: 100%; }
+.student-actions { margin: 0; align-items: center; }
+.student-actions .button { min-height: 44px; }
+#student-application { min-width: 0; }
+#student-application > h3 { margin: 4px 0 -4px; }
+#student-application > .notice { border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: var(--radius); box-shadow: 0 4px 14px rgba(11, 37, 69, .05); }
+#student-application > .notice:not(:last-child) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; background: var(--white); }
+#student-application > .notice:not(:last-child) p { margin: 0; overflow-wrap: anywhere; }
+#student-application > .notice:not(:last-child) p:nth-child(4) { display: inline-flex; align-items: center; gap: 4px; width: fit-content; padding: 5px 10px; border-radius: 999px; background: var(--navy-2); color: var(--white); font-size: .88rem; }
+.status-new { background: var(--navy-2); color: var(--white); }
+.status-reviewing { background: var(--gold); color: var(--navy); }
+.status-admitted { background: var(--navy); color: var(--white); }
+.status-rejected { background: var(--muted); color: var(--white); }
+.application-progress { position: relative; gap: 0; margin: 8px 0 20px; }
+.application-progress::before { content: ""; position: absolute; top: 22px; right: 12%; left: 12%; height: 3px; background: var(--line); }
+.application-progress li { position: relative; z-index: 1; display: grid; justify-items: center; gap: 8px; padding: 0 6px; border: 0; background: transparent; }
+.application-progress li::before { content: ""; width: 18px; height: 18px; border: 4px solid var(--line); border-radius: 50%; background: var(--white); }
+.application-progress .is-current { border: 0; background: transparent; color: var(--navy); }
+.application-progress .is-current::before { border-color: var(--gold); background: var(--gold); box-shadow: 0 0 0 4px var(--grey); }
+.application-progress li:has(~ .is-current) { color: var(--navy); }
+.application-progress li:has(~ .is-current)::before { border-color: var(--navy); background: var(--navy); }
+#student-application > .notice:last-child:has(.button) { border-left-color: var(--navy); background: var(--grey); }
+#student-application > .notice:last-child:has(.button) p { font-weight: 600; }
+#student-application > .notice:last-child:not(:has(.button)) { border-left-color: var(--line); background: var(--grey); }
+
+.application-page { max-width: 820px; }
+.application-form { gap: 20px; }
+.application-form label { gap: 8px; }
+.application-form input, .application-form select, .application-form textarea { min-height: 48px; }
+.application-form textarea { min-height: 160px; }
+.application-form label:has([required])::after { content: "*"; order: -1; justify-self: start; font-size: .75rem; color: var(--gold-dark); }
+.application-form label:has(input[type="checkbox"]) { display: flex; align-items: flex-start; gap: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 10px; line-height: 1.5; }
+.application-form input[type="checkbox"] { flex: none; width: 20px; min-height: 20px; margin-top: 2px; }
+.application-form button { min-height: 48px; }
+#application-access { color: var(--navy); }
+
+@media (max-width: 699px) {
+  .student-auth { padding-inline: 0; }
+  .dashboard-welcome { align-items: flex-start; }
+  .dashboard-welcome .button { width: 100%; }
+  #student-application > .notice:not(:last-child) { grid-template-columns: 1fr; }
+  .application-progress { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .application-progress::before { top: 18px; bottom: 18px; left: 8px; right: auto; width: 3px; height: auto; }
+  .application-progress li { grid-template-columns: 18px 1fr; justify-items: start; align-items: center; gap: 12px; padding: 0; text-align: left; }
+}
