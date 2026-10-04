@@ -20,12 +20,32 @@
       <div class="section-heading"><div><p class="eyebrow gold-text">Online application</p><h2>Start your application.</h2></div></div>
       <div id="application-access" class="notice" hidden aria-live="polite"></div>
       <form id="application-form" class="contact-form application-form" novalidate hidden>
+        <h3 class="application-section-heading">Personal details</h3>
         <label>Full name<input name="fullName" autocomplete="name" required></label>
         <label>Email address<input name="email" type="email" autocomplete="email" readonly required></label>
+        <label>Gender<select name="gender" required><option value="">Select gender</option><option>Male</option><option>Female</option></select></label>
         <label>Phone number<input name="phone" type="tel" autocomplete="tel" required></label>
         <label>Date of birth<input name="dateOfBirth" type="date" required></label>
+        <h3 class="application-section-heading">Contact and address</h3>
+        <label>State of origin<select name="stateOfOrigin" required><option value="">Select a state</option><option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option><option>Anambra</option><option>Bauchi</option><option>Bayelsa</option><option>Benue</option><option>Borno</option><option>Cross River</option><option>Delta</option><option>Ebonyi</option><option>Edo</option><option>Ekiti</option><option>Enugu</option><option>FCT</option><option>Gombe</option><option>Imo</option><option>Jigawa</option><option>Kaduna</option><option>Kano</option><option>Katsina</option><option>Kebbi</option><option>Kogi</option><option>Kwara</option><option>Lagos</option><option>Nasarawa</option><option>Niger</option><option>Ogun</option><option>Ondo</option><option>Osun</option><option>Oyo</option><option>Plateau</option><option>Rivers</option><option>Sokoto</option><option>Taraba</option><option>Yobe</option><option>Zamfara</option></select></label>
+        <label>Local government area<input name="lga" autocomplete="address-level2" required></label>
+        <label>Home address<input name="address" autocomplete="street-address" required></label>
+        <h3 class="application-section-heading">Admission details</h3>
+        <label>Entry mode<select name="entryMode" required><option value="">Select entry mode</option><option>UTME</option><option>Direct Entry</option></select></label>
         <label>Programme<select name="programme" required><option value="">Select a programme</option><option>Computer Science</option><option>Accounting</option><option>Microbiology</option><option>English &amp; Literary Studies</option><option>International Relations</option></select></label>
+        <label>JAMB or DE registration number<input name="jambRegNo"></label>
+        <label id="jamb-score-field" hidden>JAMB score<input name="jambScore" type="number" min="0" max="400"></label>
+        <label>Second-choice programme<select name="secondChoice"><option value="">Select a programme</option><option>Computer Science</option><option>Accounting</option><option>Microbiology</option><option>English &amp; Literary Studies</option><option>International Relations</option></select></label>
         <label>Last school attended<input name="lastSchool" autocomplete="organization" required></label>
+        <h3 class="application-section-heading">O'level results</h3>
+        <datalist id="olevel-subjects"><option>English Language</option><option>Mathematics</option><option>Biology</option><option>Chemistry</option><option>Physics</option><option>Economics</option><option>Government</option><option>Literature in English</option><option>Geography</option><option>Civic Education</option><option>Commerce</option><option>Accounting</option></datalist>
+        <div id="olevel-rows" aria-label="O'level subjects and grades"></div>
+        <button class="button button-outline add-subject" type="button">Add subject</button>
+        <h3 class="application-section-heading">Next of kin</h3>
+        <label>Next of kin name<input name="nextOfKinName" required></label>
+        <label>Next of kin phone number<input name="nextOfKinPhone" type="tel" required></label>
+        <label>Relationship to next of kin<input name="nextOfKinRelationship"></label>
+        <h3 class="application-section-heading">Personal statement</h3>
         <label>Personal statement<textarea name="statement" maxlength="1500" required></textarea></label>
         <label><input name="consent" type="checkbox" required> I agree that Ladex University may use this information to process my application.</label>
         <label class="honeypot" aria-hidden="true">Leave this blank<input name="website" tabindex="-1" autocomplete="off"></label>
