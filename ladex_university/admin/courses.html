@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Courses | Ladex admin</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="admin-page">
+  <main class="wrap admin-shell">
+    <header><div><p class="eyebrow gold-text">Ladex International University</p><h1>Courses</h1></div><button id="logout" class="button button-navy">Log out</button></header>
+    <nav class="admin-tabs" aria-label="Admin sections"><a class="button button-navy" href="index.html">Dashboard</a><a class="button button-navy" href="applications.html">Applications</a><a class="button button-navy" href="courses.html" aria-current="page">Courses</a><a class="button button-navy" href="registrations.html">Registrations</a><a class="button button-navy" href="results.html">Results</a><a class="button button-navy" href="fees.html">Fees</a></nav>
+    <section>
+      <div class="admin-actions"><h2>Course catalogue</h2><div class="button-row"><button id="course-add" class="button button-gold" type="button">Add course</button><button id="course-seed" class="button button-navy" type="button">Seed sample courses</button></div></div>
+      <div class="course-filters"><label>Level<select id="course-level-filter"><option value="">All levels</option><option>100</option><option>200</option><option>300</option><option>400</option><option>500</option></select></label><label>Semester<select id="course-semester-filter"><option value="">All semesters</option><option>First</option><option>Second</option></select></label><label>Department<select id="course-department-filter"><option value="">All departments</option><option>All</option><option>Computer Science</option><option>Accounting</option><option>Microbiology</option><option>English &amp; Literary Studies</option><option>International Relations</option></select></label></div>
+      <div id="course-form"></div><p id="course-message" class="form-response" aria-live="polite"></p>
+      <div class="table-wrap"><table class="course-table"><thead><tr><th>Code</th><th>Title</th><th>Units</th><th>Level</th><th>Semester</th><th>Department</th><th>Type</th><th>Actions</th></tr></thead><tbody id="courses-list" aria-live="polite"></tbody></table></div>
+    </section>
+  </main>
+  <script type="module" src="../js/admin.js"></script>
+</body>
+</html>

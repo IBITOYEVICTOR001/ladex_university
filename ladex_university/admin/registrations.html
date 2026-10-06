@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Registrations | Ladex admin</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="admin-page">
+  <main class="wrap admin-shell">
+    <header><div><p class="eyebrow gold-text">Ladex International University</p><h1>Course registrations</h1></div><button id="logout" class="button button-navy">Log out</button></header>
+    <nav class="admin-tabs" aria-label="Admin sections"><a class="button button-navy" href="index.html">Dashboard</a><a class="button button-navy" href="applications.html">Applications</a><a class="button button-navy" href="courses.html">Courses</a><a class="button button-navy" href="registrations.html" aria-current="page">Registrations</a><a class="button button-navy" href="results.html">Results</a><a class="button button-navy" href="fees.html">Fees</a></nav>
+    <section><div class="course-filters"><label>Status<select id="registration-status-filter"><option value="">All statuses</option><option>pending</option><option>approved</option><option>rejected</option></select></label><label>Semester<select id="registration-semester-filter"><option value="">All semesters</option><option>First</option><option>Second</option></select></label><label>Level<select id="registration-level-filter"><option value="">All levels</option><option>100</option><option>200</option><option>300</option><option>400</option><option>500</option></select></label></div><p id="registration-admin-message" class="form-response" aria-live="polite"></p><div class="table-wrap"><table class="course-table registration-admin-table"><thead><tr><th>Matric number</th><th>Name</th><th>Department</th><th>Level</th><th>Session</th><th>Semester</th><th>Units</th><th>Status</th><th>Action</th></tr></thead><tbody id="registrations-list" aria-live="polite"></tbody></table></div><div id="registration-details" aria-live="polite"></div></section>
+  </main>
+  <script type="module" src="../js/admin.js"></script>
+</body>
+</html>

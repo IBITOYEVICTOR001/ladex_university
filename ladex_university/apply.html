@@ -4,7 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Apply to Ladex International University</title>
-  <meta name="description" content="Submit an online application to Ladex International University.">
+  <meta name="description" content="Start your online application to Ladex International University, a fictional Nigerian university demo, and provide details for admissions review.">
+  <link rel="canonical" href="https://YOURDOMAIN.com/apply.html">
+  <meta property="og:title" content="Apply to Ladex International University">
+  <meta property="og:description" content="Start your online application to Ladex International University, a fictional Nigerian university demo, and provide details for admissions review.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://YOURDOMAIN.com/apply.html">
+  <meta property="og:image" content="https://YOURDOMAIN.com/images/hero-1.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
@@ -26,6 +32,11 @@
         <label>Gender<select name="gender" required><option value="">Select gender</option><option>Male</option><option>Female</option></select></label>
         <label>Phone number<input name="phone" type="tel" autocomplete="tel" required></label>
         <label>Date of birth<input name="dateOfBirth" type="date" required></label>
+        <label>Passport photo<input id="passport-photo" type="file" accept="image/jpeg,image/png,image/webp" required></label>
+        <div id="photo-preview" class="photo-preview" aria-label="Passport photo preview"><span>Photo preview</span></div>
+        <p class="photo-helper">Clear passport-style photo, plain background, face centred. JPG, PNG or WebP.</p>
+        <button id="photo-remove" class="button button-outline" type="button" hidden>Remove photo</button>
+        <p id="photo-error" class="photo-error" aria-live="polite"></p>
         <h3 class="application-section-heading">Contact and address</h3>
         <label>State of origin<select name="stateOfOrigin" required><option value="">Select a state</option><option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option><option>Anambra</option><option>Bauchi</option><option>Bayelsa</option><option>Benue</option><option>Borno</option><option>Cross River</option><option>Delta</option><option>Ebonyi</option><option>Edo</option><option>Ekiti</option><option>Enugu</option><option>FCT</option><option>Gombe</option><option>Imo</option><option>Jigawa</option><option>Kaduna</option><option>Kano</option><option>Katsina</option><option>Kebbi</option><option>Kogi</option><option>Kwara</option><option>Lagos</option><option>Nasarawa</option><option>Niger</option><option>Ogun</option><option>Ondo</option><option>Osun</option><option>Oyo</option><option>Plateau</option><option>Rivers</option><option>Sokoto</option><option>Taraba</option><option>Yobe</option><option>Zamfara</option></select></label>
         <label>Local government area<input name="lga" autocomplete="address-level2" required></label>

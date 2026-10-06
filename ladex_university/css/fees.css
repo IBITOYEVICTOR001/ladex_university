@@ -1,0 +1,64 @@
+/* Fee statements and the admin fee workspace. */
+[hidden] { display: none !important; }
+.fees-page, .fees-admin { display: grid; gap: 20px; }
+.fees-page .results-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 0; }
+.fees-page .results-actions .button { min-height: 44px; }
+.fees-page .back-to-portal .button-outline { border-color: var(--navy); color: var(--navy); }
+.fees-page .back-to-portal .button-outline:hover { background: var(--navy); color: var(--white); }
+.fees-banner { margin: 0; padding: 12px 16px; border-left: 5px solid var(--gold); background: var(--grey); color: var(--navy); font-weight: 700; }
+.fees-area, .fee-panel { display: grid; gap: 20px; }
+.fees-print-head { display: none; }
+.fees-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+.fees-area .results-card, .fees-stat, .fee-group, .fee-panel, .fee-create { padding: clamp(18px, 3vw, 28px); border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); box-shadow: 0 4px 14px rgba(11, 37, 69, .05); }
+.fees-area .results-card h2 { margin: 0 0 14px; color: var(--navy); }
+.fees-area .results-student-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px 24px; margin: 0; }
+.fees-area .results-student-grid > div { display: grid; gap: 2px; }
+.fees-area .results-student-grid dt { color: var(--muted); font-size: .85rem; font-weight: 600; }
+.fees-area .results-student-grid dd { margin: 0; color: var(--navy); font-weight: 600; overflow-wrap: anywhere; }
+.fees-stat { display: grid; gap: 6px; }
+.fees-stat span, .fee-field-error { color: var(--muted); font-size: .85rem; font-weight: 600; }
+.fees-stat strong { color: var(--navy); font: 700 1.5rem/1.2 var(--font-head); }
+.fees-groups { display: grid; gap: 20px; }
+.fee-group h3, .fee-panel h2, .fee-create h2 { margin: 0 0 12px; color: var(--navy); }
+.fees-table { min-width: 760px; }
+.status-pill { display: inline-block; padding: 3px 9px; border-radius: 999px; background: var(--grey); color: var(--navy); font-size: .8rem; font-weight: 700; text-transform: capitalize; }
+.status-unpaid { background: #fff0cb; color: #805600; }
+.status-part-paid { background: #e4edfb; color: #1b4a96; }
+.status-paid { background: #dff3e5; color: #176b3a; }
+.status-cancelled { background: #e6e6e6; color: #424242; }
+.status-overdue { background: #fbdada; color: #a32121; }
+.fees-empty { margin: 0; padding: 22px; border: 1px dashed var(--line); border-radius: var(--radius); background: var(--white); color: var(--navy); }
+.fees-demo { margin: 0; color: var(--muted); font-size: .8rem; font-weight: 700; }
+.fee-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); gap: 14px; }
+.fee-form-grid label, .fee-panel label { display: grid; gap: 6px; color: var(--navy); font-weight: 600; }
+.fee-form-grid input, .fee-form-grid select, .fee-form-grid textarea, .fee-panel input, .fee-panel textarea { width: 100%; }
+.fee-form-grid textarea { min-height: 90px; }
+.fee-form-grid .fee-wide { grid-column: 1 / -1; }
+.fee-choice { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.fee-choice label { display: flex; gap: 7px; align-items: center; }
+.fee-filters { display: grid; grid-template-columns: 2fr repeat(3, minmax(120px, 1fr)); gap: 12px; align-items: end; }
+.fee-filters label { display: grid; gap: 5px; color: var(--navy); font-size: .9rem; font-weight: 600; }
+.fee-invoice-list tbody tr { cursor: pointer; }
+.fee-invoice-list tbody tr:hover { background: var(--grey); }
+.fee-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 18px; margin: 0; }
+.fee-details dt { color: var(--muted); font-size: .82rem; font-weight: 600; }
+.fee-details dd { margin: -6px 0 0; color: var(--navy); font-weight: 600; overflow-wrap: anywhere; }
+.fee-panel form { display: grid; gap: 12px; margin-top: 20px; }
+.fee-panel .button-row { margin-top: 16px; }
+@media (max-width: 600px) { .fee-filters { grid-template-columns: 1fr; } .fees-page .results-actions .button { width: 100%; } }
+@media print {
+  body * { visibility: hidden; }
+  #fees-area, #fees-area * { visibility: visible; }
+  #fees-area { position: absolute; left: 0; top: 0; width: 100%; padding: 12mm; background: #fff; color: #000; display: block; }
+  .fees-print-head { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #000; }
+  .fees-print-head div { display: grid; gap: 2px; }
+  .fees-print-head strong { font-size: 16pt; }
+  .fees-stat, .fee-group { padding: 8px 0; border: 0; border-radius: 0; background: #fff; box-shadow: none; break-inside: avoid; }
+  .fees-summary { display: flex; flex-wrap: wrap; gap: 6mm; }
+  .fees-area .table-wrap { overflow: visible; border: 0; margin: 6px 0; }
+  .fees-table { min-width: 0; font-size: 9pt; }
+  .fees-area .table-wrap th { background: #e6e6e6 !important; color: #000; padding: 5px 6px; }
+  .fees-area .table-wrap td { padding: 4px 6px; }
+  .status-pill { background: transparent !important; color: #000 !important; padding: 0; }
+  .fees-receipt-cell { display: none !important; }
+}

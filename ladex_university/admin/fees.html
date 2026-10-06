@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Fees | Ladex admin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/fees.css">
+</head>
+<body class="admin-page">
+  <main class="wrap admin-shell fees-admin">
+    <header><div><p class="eyebrow gold-text">Ladex International University</p><h1>Fees and invoices</h1></div><button id="logout" class="button button-navy">Log out</button></header>
+    <nav class="admin-tabs" aria-label="Admin sections"><a class="button button-navy" href="index.html">Dashboard</a><a class="button button-navy" href="applications.html">Applications</a><a class="button button-navy" href="courses.html">Courses</a><a class="button button-navy" href="registrations.html">Registrations</a><a class="button button-navy" href="results.html">Results</a><a class="button button-navy" href="fees.html" aria-current="page">Fees</a></nav>
+    <p class="fees-banner">DEMO ONLY. Payments are entered manually; no real money is collected.</p>
+    <section class="fee-create"><h2>Create invoices</h2><form id="fee-create-form" novalidate>
+      <div class="fee-form-grid">
+        <label>Fee type<select name="feeType" id="fee-type"><option value="">Choose a fee</option><option>Tuition</option><option>Acceptance</option><option>Hostel</option><option>Medical</option><option>ICT</option><option>Examination</option></select><small id="fee-type-error" class="fee-field-error"></small></label>
+        <label>Session<input name="session" id="fee-session" placeholder="2026/2027" inputmode="numeric"><small id="fee-session-error" class="fee-field-error"></small></label>
+        <label>Semester<select name="semester" id="fee-semester"><option value="">Choose a semester</option><option>First</option><option>Second</option></select><small id="fee-semester-error" class="fee-field-error"></small></label>
+        <label>Amount (₦)<input name="amount" id="fee-amount" inputmode="numeric"><small id="fee-amount-error" class="fee-field-error"></small></label>
+        <label>Due date<input name="dueDate" id="fee-due-date" type="date"><small id="fee-due-date-error" class="fee-field-error"></small></label>
+        <label class="fee-wide">Description<textarea name="description" id="fee-description" maxlength="150"></textarea><small id="fee-description-error" class="fee-field-error"></small></label>
+        <fieldset class="fee-wide"><legend>Create for</legend><div class="fee-choice"><label><input type="radio" name="scope" value="one" checked> One student</label><label><input type="radio" name="scope" value="level"> Every student at a level</label></div></fieldset>
+        <label id="fee-student-wrap" class="fee-wide">Student matric number or name<input name="student" id="fee-student" autocomplete="off"><small id="fee-student-error" class="fee-field-error"></small></label>
+        <label id="fee-level-wrap" hidden>Level<select name="level" id="fee-level"><option value="">Choose a level</option><option>100</option><option>200</option><option>300</option><option>400</option><option>500</option></select><small id="fee-level-error" class="fee-field-error"></small></label>
+      </div>
+      <div class="button-row"><button class="button button-gold" type="submit">Create invoices</button></div>
+    </form><p id="fee-create-message" class="form-response" aria-live="polite"></p></section>
+    <section><h2>Invoices</h2><div class="fee-filters"><label>Search<input id="fee-search" placeholder="Matric number or name"></label><label>Session<select id="fee-filter-session"><option value="">All sessions</option></select></label><label>Semester<select id="fee-filter-semester"><option value="">All semesters</option><option>First</option><option>Second</option></select></label><label>Status<select id="fee-filter-status"><option value="">All statuses</option><option value="unpaid">Unpaid</option><option value="part-paid">Part-paid</option><option value="paid">Paid</option><option value="cancelled">Cancelled</option><option value="overdue">Overdue</option></select></label></div>
+      <section id="fee-totals" class="fees-summary"></section><p id="fee-list-message" class="form-response" aria-live="polite"></p>
+      <div class="table-wrap"><table class="course-table fees-table fee-invoice-list"><thead><tr><th>Matric number</th><th>Name</th><th>Session</th><th>Fee</th><th>Amount</th><th>Paid</th><th>Balance</th><th>Status</th><th>Open</th></tr></thead><tbody id="fee-list"></tbody></table></div>
+    </section>
+    <section id="fee-open-panel" class="fee-panel" hidden aria-live="polite"></section>
+  </main>
+  <script type="module" src="../js/admin.js"></script>
+  <script type="module" src="../js/fees-admin.js"></script>
+</body>
+</html>

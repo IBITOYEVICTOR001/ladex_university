@@ -26,8 +26,8 @@ service cloud.firestore {
       return request.auth != null
         && request.auth.uid == uid
         && request.auth.token.email_verified == true
-        && d.keys().hasOnly(['uid','reference','fullName','email','phone','dateOfBirth','programme','lastSchool','statement','status','createdAt','gender','stateOfOrigin','lga','address','entryMode','jambRegNo','jambScore','secondChoice','olevel','nextOfKinName','nextOfKinPhone','nextOfKinRelationship'])
-        && d.keys().hasAll(['uid','reference','fullName','email','phone','programme','status','createdAt','gender','stateOfOrigin','lga','address','entryMode','nextOfKinName','nextOfKinPhone'])
+        && d.keys().hasOnly(['uid','reference','fullName','email','phone','dateOfBirth','programme','lastSchool','statement','status','createdAt','gender','stateOfOrigin','lga','address','entryMode','jambRegNo','jambScore','secondChoice','olevel','nextOfKinName','nextOfKinPhone','nextOfKinRelationship','photo'])
+        && d.keys().hasAll(['uid','reference','fullName','email','phone','programme','status','createdAt','gender','stateOfOrigin','lga','address','entryMode','nextOfKinName','nextOfKinPhone','photo'])
         && d.uid == uid
         && d.reference is string && d.reference.matches('LU-[A-Z2-9]{6}')
         && d.email == request.auth.token.email
@@ -49,6 +49,7 @@ service cloud.firestore {
         && d.nextOfKinName is string && d.nextOfKinName.size() > 1 && d.nextOfKinName.size() <= 120
         && d.nextOfKinPhone is string && d.nextOfKinPhone.size() >= 7 && d.nextOfKinPhone.size() <= 20
         && (!('nextOfKinRelationship' in d) || (d.nextOfKinRelationship is string && d.nextOfKinRelationship.size() <= 60))
+        && d.photo is string && d.photo.size() > 100 && d.photo.size() <= 120000 && d.photo.matches('data:image/jpeg;base64,.*')
         && d.status == 'new'
         && d.createdAt == request.time;
     }
@@ -56,6 +57,174 @@ service cloud.firestore {
       allow create: if validApplication(appId);
       allow read: if isAdmin() || (request.auth != null && request.auth.uid == appId);
       allow update, delete: if isAdmin();
+    }
+    match /students/{uid} {
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == uid);
+      allow create, update, delete: if isAdmin();
+    }
+    match /matricNumbers/{id} {
+      allow read, create, delete: if isAdmin();
+      allow update: if false;
+    }
+    match /counters/{id} {
+      allow read, write: if isAdmin();
+    }
+    function validCourse(id) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['code','title','units','level','semester','department','type','updatedAt'])
+        && d.keys().hasAll(['code','title','units','level','semester','department','type','updatedAt'])
+        && d.code is string && d.code == id && d.code.matches('[A-Z]{3}[0-9]{3}')
+        && d.title is string && d.title.size() > 2 && d.title.size() <= 120
+        && d.units is int && d.units >= 1 && d.units <= 6
+        && d.level is int && d.level in [100,200,300,400,500]
+        && d.semester in ['First','Second']
+        && d.department is string && d.department.size() > 1 && d.department.size() <= 80
+        && d.type in ['Core','Elective']
+        && d.updatedAt == request.time;
+    }
+    match /courses/{id} {
+      allow read: if request.auth != null;
+      allow create, update: if isAdmin() && validCourse(id);
+      allow delete: if isAdmin();
+    }
+    function studentRec() {
+      return get(/databases/$(database)/documents/students/$(request.auth.uid)).data;
+    }
+    function validRegistration(regId) {
+      let d = request.resource.data;
+      let s = studentRec();
+      return request.auth != null
+        && d.keys().hasOnly(['uid','matricNumber','fullName','department','level','session','semester','courses','totalUnits','status','submittedAt'])
+        && d.keys().hasAll(['uid','matricNumber','fullName','department','level','session','semester','courses','totalUnits','status','submittedAt'])
+        && d.uid == request.auth.uid
+        && d.matricNumber == s.matricNumber
+        && d.fullName == s.fullName
+        && d.department == s.department
+        && d.level == s.level
+        && d.session == s.session
+        && d.semester in ['First','Second']
+        && regId == request.auth.uid + '_' + d.session.split('/')[0] + '_' + d.semester
+        && d.courses is list && d.courses.size() >= 1 && d.courses.size() <= 12
+        && d.totalUnits is int && d.totalUnits >= 1 && d.totalUnits <= 24
+        && d.status == 'pending'
+        && d.submittedAt == request.time;
+    }
+    match /registrations/{regId} {
+      allow get: if isAdmin() || (request.auth != null && regId.matches(request.auth.uid + '_.*'));
+      allow list: if isAdmin();
+      allow create: if validRegistration(regId);
+      allow update: if isAdmin()
+        || (request.auth != null && request.auth.uid == resource.data.uid
+            && resource.data.status in ['pending','rejected']
+            && validRegistration(regId));
+      allow delete: if isAdmin();
+    }
+    function gradeMatches(d) {
+      return (d.total >= 70 && d.grade == 'A' && d.point == 5)
+        || (d.total >= 60 && d.total <= 69 && d.grade == 'B' && d.point == 4)
+        || (d.total >= 50 && d.total <= 59 && d.grade == 'C' && d.point == 3)
+        || (d.total >= 45 && d.total <= 49 && d.grade == 'D' && d.point == 2)
+        || (d.total >= 40 && d.total <= 44 && d.grade == 'E' && d.point == 1)
+        || (d.total <= 39 && d.grade == 'F' && d.point == 0);
+    }
+    function validResult(id) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['uid','matricNumber','fullName','department','code','title','units','level','session','semester','ca','exam','total','grade','point','published','updatedAt'])
+        && d.keys().hasAll(['uid','matricNumber','fullName','department','code','title','units','level','session','semester','ca','exam','total','grade','point','published','updatedAt'])
+        && d.uid is string && d.uid.size() > 5 && d.uid.size() <= 128
+        && d.matricNumber is string && d.matricNumber.size() <= 40
+        && d.fullName is string && d.fullName.size() <= 120
+        && d.department is string && d.department.size() <= 80
+        && d.title is string && d.title.size() <= 120
+        && d.code is string && d.code.matches('[A-Z]{3}[0-9]{3}')
+        && d.session is string && d.session.matches('[0-9]{4}/[0-9]{4}')
+        && d.semester in ['First','Second']
+        && id == d.uid + '_' + d.session.split('/')[0] + '_' + d.semester + '_' + d.code
+        && d.units is int && d.units >= 1 && d.units <= 6
+        && d.level is int && d.level in [100,200,300,400,500]
+        && d.ca is int && d.ca >= 0 && d.ca <= 30
+        && d.exam is int && d.exam >= 0 && d.exam <= 70
+        && d.total is int && d.total == d.ca + d.exam
+        && d.grade in ['A','B','C','D','E','F']
+        && d.point is int
+        && gradeMatches(d)
+        && d.published is bool
+        && d.updatedAt == request.time;
+    }
+    match /results/{id} {
+      allow read: if isAdmin()
+        || (request.auth != null && resource.data.uid == request.auth.uid && resource.data.published == true);
+      allow create, update: if isAdmin() && validResult(id);
+      allow delete: if isAdmin();
+    }
+    function invoiceKeys(d) {
+      return d.keys().hasOnly(['uid','matricNumber','fullName','department','level','session','semester','feeType','description','amount','amountPaid','dueDate','status','createdAt','updatedAt','lastPaymentRef','lastPaymentAt'])
+        && d.keys().hasAll(['uid','matricNumber','fullName','department','level','session','semester','feeType','description','amount','amountPaid','dueDate','status','createdAt','updatedAt']);
+    }
+    function invoiceDataIsValid(d, id) {
+      return invoiceKeys(d)
+        && d.uid is string && d.uid.size() > 5 && d.uid.size() <= 128
+        && d.matricNumber is string && d.matricNumber.size() > 0 && d.matricNumber.size() <= 40
+        && d.fullName is string && d.fullName.size() > 1 && d.fullName.size() <= 120
+        && d.department is string && d.department.size() > 1 && d.department.size() <= 80
+        && d.level is int && d.level in [100,200,300,400,500]
+        && d.session is string && d.session.matches('[0-9]{4}/[0-9]{4}')
+        && int(d.session.split('/')[1]) == int(d.session.split('/')[0]) + 1
+        && d.semester in ['First','Second']
+        && d.feeType in ['Tuition','Acceptance','Hostel','Medical','ICT','Examination']
+        && id == d.uid + '_' + d.session.split('/')[0] + '_' + d.semester + '_' + d.feeType.lower()
+        && d.description is string && d.description.size() >= 3 && d.description.size() <= 150
+        && d.amount is int && d.amount >= 1 && d.amount <= 10000000
+        && d.amountPaid is int && d.amountPaid >= 0 && d.amountPaid <= d.amount
+        && d.dueDate is string && d.dueDate.matches('[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        && d.status in ['unpaid','part-paid','paid','cancelled']
+        && (!('lastPaymentRef' in d) || (d.lastPaymentRef is string && d.lastPaymentRef.size() <= 40))
+        && (!('lastPaymentAt' in d) || d.lastPaymentAt is timestamp);
+    }
+    function invoiceStatusMatches(d) {
+      return (d.status == 'unpaid' && d.amountPaid == 0)
+        || (d.status == 'part-paid' && d.amountPaid > 0 && d.amountPaid < d.amount)
+        || (d.status == 'paid' && d.amountPaid == d.amount)
+        || (d.status == 'cancelled' && d.amountPaid == 0);
+    }
+    function paymentDetailsUnchanged() {
+      return (!('lastPaymentAt' in resource.data) && !('lastPaymentAt' in request.resource.data)
+          && !('lastPaymentRef' in resource.data) && !('lastPaymentRef' in request.resource.data))
+        || (('lastPaymentAt' in resource.data) && ('lastPaymentAt' in request.resource.data)
+          && ('lastPaymentRef' in resource.data) && ('lastPaymentRef' in request.resource.data)
+          && resource.data.lastPaymentAt == request.resource.data.lastPaymentAt
+          && resource.data.lastPaymentRef == request.resource.data.lastPaymentRef);
+    }
+    match /invoices/{id} {
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.uid);
+      allow create: if isAdmin()
+        && invoiceDataIsValid(request.resource.data, id)
+        && request.resource.data.status == 'unpaid'
+        && request.resource.data.amountPaid == 0
+        && !('lastPaymentRef' in request.resource.data)
+        && !('lastPaymentAt' in request.resource.data)
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+      allow update: if isAdmin()
+        && resource.data.status in ['unpaid','part-paid']
+        && invoiceDataIsValid(request.resource.data, id)
+        && invoiceStatusMatches(request.resource.data)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.matricNumber == resource.data.matricNumber
+        && request.resource.data.fullName == resource.data.fullName
+        && request.resource.data.department == resource.data.department
+        && request.resource.data.level == resource.data.level
+        && request.resource.data.session == resource.data.session
+        && request.resource.data.semester == resource.data.semester
+        && request.resource.data.feeType == resource.data.feeType
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.amountPaid >= resource.data.amountPaid
+        && (resource.data.amountPaid == 0 && request.resource.data.amountPaid == 0 || request.resource.data.amount == resource.data.amount)
+        && (request.resource.data.amountPaid != resource.data.amountPaid
+          ? (request.resource.data.lastPaymentAt == request.time && ('lastPaymentRef' in request.resource.data))
+          : paymentDetailsUnchanged());
+      allow delete: if isAdmin() && resource.data.amountPaid == 0;
     }
     match /{document=**} { allow read, write: if false; }
   }

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Results | Ladex admin</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="admin-page">
+  <main class="wrap admin-shell">
+    <header><div><p class="eyebrow gold-text">Ladex International University</p><h1>Result entry</h1></div><button id="logout" class="button button-navy">Log out</button></header>
+    <nav class="admin-tabs" aria-label="Admin sections"><a class="button button-navy" href="index.html">Dashboard</a><a class="button button-navy" href="applications.html">Applications</a><a class="button button-navy" href="courses.html">Courses</a><a class="button button-navy" href="registrations.html">Registrations</a><a class="button button-navy" href="results.html" aria-current="page">Results</a><a class="button button-navy" href="fees.html">Fees</a></nav>
+    <section><div class="course-filters results-controls"><label>Session<input id="result-session" inputmode="numeric" pattern="[0-9]{4}/[0-9]{4}" required></label><label>Semester<select id="result-semester"><option>First</option><option>Second</option></select></label><label>Course<select id="result-course"><option value="">Select a course</option></select></label><button id="result-load" class="button button-gold" type="button">Load students</button></div><p id="results-message" class="form-response" aria-live="polite"></p><div class="results-layout"><div class="table-wrap"><table class="course-table results-table"><thead><tr><th>Matric number</th><th>Name</th><th>CA</th><th>Exam</th><th>Total</th><th>Grade</th><th>Points</th><th>State</th><th>Remove</th></tr></thead><tbody id="results-list" aria-live="polite"></tbody></table></div><aside id="grading-key" class="grading-key"></aside></div><div id="result-actions" class="button-row" hidden><button id="result-save" class="button button-gold" type="button">Save scores</button><button id="result-publish" class="button button-navy" type="button">Publish</button><button id="result-unpublish" class="button button-outline" type="button">Unpublish</button></div></section>
+  </main>
+  <script type="module" src="../js/admin.js"></script>
+</body>
+</html>

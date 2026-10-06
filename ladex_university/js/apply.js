@@ -7,6 +7,11 @@ const response = form?.querySelector('.form-response');
 const access = document.querySelector('#application-access');
 const olevelRows = document.querySelector('#olevel-rows');
 const addSubject = document.querySelector('.add-subject');
+const photoInput = document.querySelector('#passport-photo');
+const photoPreview = document.querySelector('#photo-preview');
+const photoRemove = document.querySelector('#photo-remove');
+const photoError = document.querySelector('#photo-error');
+let photo = '';
 const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const reference = () => { const values = new Uint32Array(6); crypto.getRandomValues(values); return `LU-${Array.from(values, value => alphabet[value % alphabet.length]).join('')}`; };
 const requiredFields = { gender: 'Select your gender.', stateOfOrigin: 'Select your state of origin.', lga: 'Enter your local government area.', address: 'Enter your home address.', entryMode: 'Select your entry mode.', nextOfKinName: 'Enter your next of kin name.', nextOfKinPhone: 'Enter your next of kin phone number.' };
@@ -14,6 +19,28 @@ const addOlevelRow = () => { if (!olevelRows || olevelRows.children.length >= 9)
 for (let index = 0; index < 5; index += 1) addOlevelRow();
 addSubject?.addEventListener('click', addOlevelRow);
 form?.elements.entryMode?.addEventListener('change', event => { const score = form.elements.jambScore, field = document.querySelector('#jamb-score-field'), isUtme = event.target.value === 'UTME'; field.hidden = !isUtme; score.value = isUtme ? score.value : ''; });
+const clearPhoto = () => { photo = ''; if (photoInput) photoInput.value = ''; if (photoPreview) { photoPreview.replaceChildren(); const placeholder = document.createElement('span'); placeholder.textContent = 'Photo preview'; photoPreview.append(placeholder); photoPreview.classList.remove('has-photo'); } if (photoRemove) photoRemove.hidden = true; };
+const loadImage = source => new Promise((resolve, reject) => { const image = new Image(); image.onload = () => resolve(image); image.onerror = reject; image.src = source; });
+const resizePhoto = async file => {
+  const image = await loadImage(URL.createObjectURL(file));
+  const canvas = document.createElement('canvas'), ratio = 3 / 4;
+  canvas.width = 300; canvas.height = 400;
+  const context = canvas.getContext('2d'), sourceRatio = image.naturalWidth / image.naturalHeight;
+  const sourceWidth = sourceRatio > ratio ? image.naturalHeight * ratio : image.naturalWidth;
+  const sourceHeight = sourceRatio > ratio ? image.naturalHeight : image.naturalWidth / ratio;
+  context.drawImage(image, (image.naturalWidth - sourceWidth) / 2, (image.naturalHeight - sourceHeight) / 2, sourceWidth, sourceHeight, 0, 0, 300, 400);
+  for (const quality of [.8, .7, .6, .5, .4]) { const dataUrl = canvas.toDataURL('image/jpeg', quality); if (dataUrl.length <= 90000) return dataUrl; }
+  throw new Error('Please choose a different photo that can be compressed further.');
+};
+photoInput?.addEventListener('change', async event => {
+  const file = event.target.files?.[0];
+  photoError.textContent = '';
+  if (!file) { clearPhoto(); return; }
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) { clearPhoto(); photoError.textContent = 'Please choose a JPG, PNG or WebP image.'; return; }
+  if (file.size > 8 * 1024 * 1024) { clearPhoto(); photoError.textContent = 'Please choose a photo smaller than 8 MB.'; return; }
+  try { photo = await resizePhoto(file); photoPreview.replaceChildren(); const image = document.createElement('img'); image.src = photo; image.alt = 'Selected passport photo'; photoPreview.append(image); photoPreview.classList.add('has-photo'); photoRemove.hidden = false; } catch (error) { clearPhoto(); photoError.textContent = error.message || 'Your photo could not be processed. Please choose another one.'; }
+});
+photoRemove?.addEventListener('click', () => { clearPhoto(); photoError.textContent = ''; });
 
 onAuthStateChanged(auth, async user => {
   if (!user) { location.href = 'student/register.html?apply=1'; return; }
@@ -26,6 +53,7 @@ onAuthStateChanged(auth, async user => {
 
 form?.addEventListener('submit', async event => {
   event.preventDefault();
+  if (!photo) { photoError.textContent = 'Please add your passport photo before submitting.'; photoInput?.focus(); return; }
   Object.entries(requiredFields).forEach(([name, message]) => { const field = form.elements[name]; field.setCustomValidity(String(field.value).trim() ? '' : message); });
   if (!form.checkValidity()) { const invalid = Object.entries(requiredFields).find(([name]) => !String(form.elements[name].value).trim()); response.textContent = invalid ? invalid[1] : 'Please complete all required fields.'; form.reportValidity(); return; }
   const values = new FormData(form);
@@ -60,6 +88,7 @@ form?.addEventListener('submit', async event => {
       entryMode: String(values.get('entryMode') || '').trim(),
       nextOfKinName: String(values.get('nextOfKinName') || '').trim(),
       nextOfKinPhone: String(values.get('nextOfKinPhone') || '').trim(),
+      photo,
       status: 'new',
       createdAt: serverTimestamp()
     };

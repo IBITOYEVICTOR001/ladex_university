@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
   <title>Student Dashboard | Ladex International University</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,8 +17,9 @@
   <main id="main-content">
     <section class="page-banner"><div class="wrap"><p><a href="../index.html">Home</a> <span>/</span> Student dashboard</p><h1>Student dashboard</h1></div></section>
     <section class="section wrap student-dashboard">
+      <p id="back-to-portal" class="back-to-portal" hidden><a class="button button-outline" href="portal.html">Back to student portal</a></p>
       <div class="section-heading dashboard-welcome"><div><p class="eyebrow gold-text">Student portal</p><h2 id="student-name">Your account</h2><p id="student-email"></p></div><button id="student-logout" class="button button-navy" type="button">Log out</button></div>
-      <div id="verification-banner" class="notice verification-banner" hidden><p>Please verify your email address before applying.</p><button id="resend-verification" class="button button-gold" type="button">Resend verification email</button><p class="form-response" aria-live="polite"></p></div>
+      <div id="verification-banner" class="notice verification-banner" hidden><p class="verification-message">Please verify your email address to start your application.</p><button id="refresh-verification" class="button button-gold" type="button">I have verified my email</button><button id="resend-verification" class="button button-gold" type="button">Resend verification email</button><p class="form-response" aria-live="polite"></p></div>
       <div id="student-actions" class="button-row student-actions"><button id="change-password" class="button button-navy" type="button">Change password</button><p class="form-response" aria-live="polite"></p></div>
       <div id="student-application" aria-live="polite"></div>
     </section>
