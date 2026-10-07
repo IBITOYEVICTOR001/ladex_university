@@ -1,7 +1,7 @@
-# Project: [SCHOOL NAME] (fictional demo university)
+# Project: Ladex International University
 
-Demo website by Ibitoye Victor. The school is not real. Every PDF
-and payment screen must show "DEMO ONLY".
+Website by Ibitoye Victor. Do not add demo or placeholder labels to PDFs,
+payment screens or public pages.
 
 ## Rules
 - Plain HTML, CSS, JavaScript. No frameworks, no build step.
@@ -14,7 +14,7 @@ and payment screen must show "DEMO ONLY".
 - Make small changes, don't rewrite working files.
 
 ## School details
-Name: [NAME] | Motto: [MOTTO] | Colours: [COLOURS]
+Name: Ladex International University | Motto: [MOTTO] | Colours: navy and gold
 Courses and fees: [LIST]
 Admission rules: JAMB score >= 180, at least 5 credits including
 English and Maths.

@@ -25,7 +25,7 @@ const drawHeader = (state, application, logo) => {
   if (logo) doc.addImage(logo, 'PNG', 15, 15, 20, 20);
   doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.setTextColor(...navy); doc.text('Ladex International University', logo ? 40 : 15, 23);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(...grey); doc.text('Lekki, Lagos, Nigeria', logo ? 40 : 15, 29);
-  doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(...gold); doc.text('DEMO ONLY', logo ? 40 : 15, 35);
+  
   if (application.photo) {
     try { doc.addImage(application.photo, 'JPEG', 165, 15, 30, 40); doc.setDrawColor(...grey); doc.setLineWidth(.2); doc.rect(165, 15, 30, 40); } catch { doc.setDrawColor(...grey); doc.rect(165, 15, 30, 40); }
   } else { doc.setDrawColor(...grey); doc.rect(165, 15, 30, 40); doc.setFontSize(7); doc.text('Passport photo', 180, 36, { align: 'center' }); }
@@ -52,6 +52,7 @@ const drawOlevel = (state, olevel) => {
   sectionHeading(state, "O'level results", 7 + firstRowHeight);
   roomFor(state, 7); doc.setFillColor(...lightGrey); doc.rect(15, state.y, 180, 7, 'F'); doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(...navy); doc.text('Subject', 17, state.y + 4.7); doc.text('Grade', 140, state.y + 4.7); state.y += 7;
   rows.forEach(([subject, grade]) => { const subjectLines = doc.splitTextToSize(subject, 116), gradeLines = doc.splitTextToSize(grade, 50), height = Math.max(subjectLines.length, gradeLines.length) * 4.5 + 4; roomFor(state, height); doc.setDrawColor(...lightGrey); doc.rect(15, state.y, 180, height); doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(0, 0, 0); doc.text(subjectLines, 17, state.y + 4.5); doc.text(gradeLines, 140, state.y + 4.5); state.y += height; });
+  state.y += 3;
 };
 const drawStatement = (state, statement) => {
   const { doc } = state, lines = doc.splitTextToSize(value(statement), 180); sectionHeading(state, 'Personal statement', 8);

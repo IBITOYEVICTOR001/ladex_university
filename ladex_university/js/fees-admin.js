@@ -140,7 +140,7 @@ const detailList = invoice => {
 
 const paymentForm = invoice => {
   const form = element('form');
-  form.append(element('h3', '', 'Record payment — DEMO ONLY'));
+  form.append(element('h3', '', 'Record payment'));
   const amountLabel = element('label', '', 'Amount (₦)');
   const amount = element('input'); amount.name = 'amount'; amount.inputMode = 'numeric'; amountLabel.append(amount);
   const amountError = element('small', 'fee-field-error'); amountLabel.append(amountError);
@@ -156,12 +156,12 @@ const paymentForm = invoice => {
     amountError.textContent = ''; referenceError.textContent = '';
     const check = validatePayment(invoice, { amount: amount.value, reference: reference.value });
     if (!check.valid) { amountError.textContent = check.errors.amount || check.errors.invoice || ''; referenceError.textContent = check.errors.reference || ''; return; }
-    if (!confirm(`Record ${formatNaira(amount.value)} against this DEMO ONLY invoice?`)) return;
+    if (!confirm(`Record ${formatNaira(amount.value)} against this invoice?`)) return;
     submit.disabled = true;
     try {
       const newPaid = Number(invoice.amountPaid) + Number(amount.value);
       await updateDoc(doc(db, 'invoices', invoice.id), { amountPaid: newPaid, status: statusFor(invoice.amount, newPaid), lastPaymentRef: reference.value.trim(), lastPaymentAt: serverTimestamp(), updatedAt: serverTimestamp() });
-      createMessage.textContent = 'DEMO payment recorded.';
+      createMessage.textContent = 'Payment recorded.';
       await loadInvoices();
     } catch (error) { await showWriteFailure('The payment could not be recorded. The invoice list was reloaded.', error); }
     finally { submit.disabled = false; }
@@ -206,14 +206,14 @@ function openInvoice(id) {
   if (!invoice) return;
   selectedId = id;
   panel.hidden = false;
-  panel.replaceChildren(element('h2', '', 'Invoice — DEMO ONLY'), detailList(invoice));
+  panel.replaceChildren(element('h2', '', 'Invoice'), detailList(invoice));
   if (canRecordPayment(invoice)) panel.append(paymentForm(invoice));
   if (canEdit(invoice)) panel.append(editForm(invoice));
   const actions = element('div', 'button-row');
   if (canCancel(invoice)) {
     const cancel = element('button', 'button button-outline', 'Cancel invoice'); cancel.type = 'button';
     cancel.addEventListener('click', async () => {
-      if (!confirm('Cancel this DEMO ONLY invoice?')) return;
+      if (!confirm('Cancel this invoice?')) return;
       try { await updateDoc(doc(db, 'invoices', invoice.id), { amountPaid: 0, status: 'cancelled', updatedAt: serverTimestamp() }); createMessage.textContent = 'Invoice cancelled.'; await loadInvoices(); }
       catch (error) { await showWriteFailure('The invoice could not be cancelled. The invoice list was reloaded.', error); }
     });
@@ -222,7 +222,7 @@ function openInvoice(id) {
   if (invoice.status === 'cancelled') {
     const remove = element('button', 'button button-outline', 'Delete invoice'); remove.type = 'button';
     remove.addEventListener('click', async () => {
-      if (!confirm('Delete this cancelled DEMO ONLY invoice?')) return;
+      if (!confirm('Delete this cancelled invoice?')) return;
       try { await deleteDoc(doc(db, 'invoices', invoice.id)); selectedId = ''; panel.hidden = true; createMessage.textContent = 'Cancelled invoice deleted.'; await loadInvoices(); }
       catch (error) { await showWriteFailure('The invoice could not be deleted. The invoice list was reloaded.', error); }
     });
@@ -260,7 +260,7 @@ createForm.addEventListener('submit', async event => {
     return true;
   });
   if (!ready.length) { createMessage.textContent = `No invoices to create. ${duplicates} already exist and ${incomplete} student record${incomplete === 1 ? ' is' : 's are'} incomplete.`; return; }
-  if (!confirm(`Create ${ready.length} DEMO ONLY invoice${ready.length === 1 ? '' : 's'}? ${duplicates} existing and ${incomplete} incomplete record${incomplete === 1 ? '' : 's'} will be skipped.`)) return;
+  if (!confirm(`Create ${ready.length} invoice${ready.length === 1 ? '' : 's'}? ${duplicates} existing and ${incomplete} incomplete record${incomplete === 1 ? '' : 's'} will be skipped.`)) return;
   const submit = createForm.querySelector('button[type="submit"]'); submit.disabled = true;
   try {
     for (let start = 0; start < ready.length; start += 400) {

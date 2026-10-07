@@ -17,7 +17,7 @@ const getLogo = path => {
 };
 
 const addFooter = doc => {
-  const pages = doc.getNumberOfPages(), footer = `Generated on ${today()}. System-generated document. DEMO ONLY.`;
+  const pages = doc.getNumberOfPages(), footer = `Generated on ${today()}. System-generated document.`;
   for (let page = 1; page <= pages; page += 1) {
     doc.setPage(page); doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(...grey);
     doc.text(footer, 15, 282); const pageText = `Page ${page} of ${pages}`; doc.text(pageText, 195 - doc.getTextWidth(pageText), 282);
@@ -28,7 +28,7 @@ const drawHeader = (state, logo) => {
   if (logo) doc.addImage(logo, 'PNG', 15, 15, 20, 20);
   doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.setTextColor(...navy); doc.text('Ladex International University', logo ? 40 : 15, 23);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(...grey); doc.text('Lekki, Lagos, Nigeria', logo ? 40 : 15, 29);
-  doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(...gold); doc.text('DEMO ONLY', logo ? 40 : 15, 35);
+  
   doc.setDrawColor(...gold); doc.setLineWidth(.5); doc.line(15, 45, 195, 45); state.y = 54;
 };
 const newPage = state => { state.doc.addPage(); drawHeader(state, state.logo); };
@@ -87,7 +87,7 @@ const drawGroups = (state, invoices) => {
 
 export const makeStatementPdf = async (student, invoices) => {
   const state = await createDocument(), { doc } = state, rows = Array.isArray(invoices) ? invoices : [];
-  title(state, 'Statement of Account (DEMO ONLY)');
+  title(state, 'Statement of Account');
   const details = [['Full name', student?.fullName], ['Matric number', student?.matricNumber], ['Programme', student?.programme], ['Department', student?.department], ['Level', student?.level ? `${student.level} Level` : '—'], ['Session', student?.session]];
   sectionHeading(state, 'Student details', pairHeight(doc, details.slice(0, 2))); drawPairs(state, details); drawSummary(state, rows); drawGroups(state, rows);
   addFooter(doc); doc.save(`Ladex-Fees-Statement-${filePart(student?.matricNumber)}.pdf`);
@@ -95,7 +95,7 @@ export const makeStatementPdf = async (student, invoices) => {
 
 export const makeReceiptPdf = async (student, invoice) => {
   const state = await createDocument(), { doc } = state;
-  title(state, 'Payment Receipt (DEMO ONLY)');
+  title(state, 'Payment Receipt');
   const details = [
     ['Full name', student?.fullName], ['Matric number', student?.matricNumber], ['Programme', student?.programme], ['Department', student?.department], ['Invoice reference', invoice?.id], ['Fee type', invoice?.feeType], ['Description', invoice?.description], ['Session', invoice?.session], ['Semester', invoice?.semester], ['Due date', invoice?.dueDate], ['Amount', money(invoice?.amount)], ['Total paid so far', money(invoice?.amountPaid)], ['Balance', money(balanceOf(invoice))], ['Status', isOverdue(invoice) ? 'Overdue' : value(invoice?.status).replace(/(^|-)\w/g, item => item.toUpperCase())], ['Last payment date', dateText(invoice?.lastPaymentAt)], ['Last payment reference', invoice?.lastPaymentRef]
   ];

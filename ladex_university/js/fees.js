@@ -135,7 +135,7 @@ onAuthStateChanged(auth, async user => {
 });
 
 printButton?.addEventListener('click', () => {
-  printedOn.textContent = `Printed on ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} — DEMO ONLY`;
+  printedOn.textContent = `Printed on ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`;
   window.print();
 });
 
